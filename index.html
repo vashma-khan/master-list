@@ -232,9 +232,12 @@ function init(){
   bindAll();
 }
 
-function bindAll(){
-  // PIN
+// Bind PIN immediately — must work before init() runs
+document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('pin-screen').addEventListener('click',e=>{const b=e.target.closest('.pin-btn');if(b)pinPress(b.dataset.p||'');});
+});
+
+function bindAll(){
   // Sidebar
   document.getElementById('hdr-toggle').addEventListener('click',()=>{sbOpen=!sbOpen;document.getElementById('sidebar').classList.toggle('collapsed',!sbOpen);});
   // Nav
