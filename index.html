@@ -47,6 +47,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif;backg
 #ftabs{display:flex;gap:2px;background:var(--bg);border-radius:7px;padding:2px;flex-shrink:0}
 .ftab{padding:4px 7px;border-radius:5px;border:none;cursor:pointer;font-size:11px;background:transparent;color:var(--muted);font-family:inherit;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .ftab.active{background:#fff;color:var(--navy);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+#sort-btn{border:1px solid var(--border);border-radius:7px;padding:5px 8px;font-size:11px;color:var(--muted);background:var(--bg);cursor:pointer;font-family:inherit;flex-shrink:0;white-space:nowrap;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+#sort-btn.on{border-color:var(--teal);color:var(--teal);background:#e5f3f5}
 #content{flex:1;overflow-y:auto;padding:11px 11px 90px;display:flex;flex-direction:column;gap:6px}
 .ri{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--card);border-radius:9px;border:1px solid var(--border);cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:opacity .15s,border-color .15s}
 .ri.done{opacity:.5;border-color:#b6d9be}
@@ -139,6 +141,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif;backg
       <button id="hdr-toggle">☰</button>
       <div id="hdr-info"><h1 id="view-title">Today</h1><p id="view-sub"></p></div>
       <input id="hdr-search" placeholder="Search..." style="display:none">
+      <button id="sort-btn" style="display:none">↕ Priority</button>
       <div id="ftabs" style="display:none">
         <button class="ftab active" data-filter="active">Active</button>
         <button class="ftab" data-filter="done">Done</button>
@@ -202,7 +205,7 @@ function mk(id,t,c,s,p,n,ms){return{id,title:t,category:c,status:s||'todo',prior
 function ml(id,t){return{id,title:t,done:false};}
 const SEED=[mk('t1','Clear inbox','today','todo','high'),mk('t2','Expenses from Utrecht','today','todo','high'),mk('wo1','Bestevaer Master Deck','work','in-progress','high','Central exec reference.',[ml('m1a','People Tech onboarding — team + Patrick'),ml('m1b','Utrecht outcomes'),ml('m1c','Work required'),ml('m1d','Cost view'),ml('m1e','Value add'),ml('m1f','Bestevaer costs ($$)')]),mk('wo2','CFO / Transformation version','work','todo','high','Tailored from Bestevaer Master Deck'),mk('wo3','Integrations team version','work','todo','high','Tailored from Bestevaer Master Deck'),mk('wo4','Reporting roadmap + Data and AI roadmap','work','todo','high','Engage Vittorio'),mk('wo5','Culture map','work','todo','medium'),mk('wo6','Adoption heat map — country by country','work','todo','medium'),mk('wo7','Workday Rising tickets','work','todo','medium'),mk('wo8','Follow up on Christiane change','work','todo','high'),mk('wo9','Team training','work','todo','medium'),mk('wo10','Update Master Deck with Delivered Projects','work','todo','medium'),mk('wo11','Update Journey slide with AI content','work','todo','medium'),mk('wo12','Bonus / Merit process for next year','work','todo','high','',[ml('m12a','Define approach for Andy'),ml('m12b','Track updates and edge cases'),ml('m12c','Capture country/org variations')]),mk('wo13','Craig Onestream workstream — next steps','work','todo','medium'),mk('wo14','Expand data in Databricks for Patrick','work','todo','high','',[ml('m14a','Talent data'),ml('m14b','Learning data'),ml('m14c','Rewards data')]),mk('wo15','Establish People Team AI community','work','todo','medium'),mk('wo16','Send Kristina internal roles fills report','work','todo','high'),mk('wo17','Show Paul screenshot of exits','work','todo','high'),mk('wo18','Mariona statement of work','work','todo','high'),mk('ca1','Complete full CV','career','todo','high'),mk('ca2','Sales Competency Assessment — UDP exec reporting','career','todo','high'),mk('ca3','Follow up on Mel — Programme/Delivery Manager','career','todo','high'),mk('ca4','Conversation with Emma about her goals','career','todo','medium'),mk('ca5','Team org structure decision','career','todo','medium'),mk('ca6','Engage new CEO — follow up and book a slot','career','todo','high'),mk('ca7','Follow up on team objectives and general progress','career','todo','high'),mk('ca8','Follow up on team IDP and objective setting','career','todo','medium'),mk('ca9','Do my own IDP','career','todo','high'),mk('pa1','GOAL: Handwriting in a straight line','parenting','in-progress','high'),mk('pa2','GOAL: Punctuation — capitals, full stops, commas','parenting','in-progress','high'),mk('pa3','Handwriting Without Tears — 5-10 mins daily','parenting','todo','high','Pencil grip first'),mk('pa4','Set up Prodigy and Numicon at home','parenting','todo','medium'),mk('pa5','Maths support — baking, dice games','parenting','todo','medium'),mk('pa6','Role play social scenarios','parenting','todo','medium','Bubble concept, walking-away scripts'),mk('pa7','Identify safe adult at school with Nyla','parenting','todo','high'),mk('pa8','Gradually increase independence','parenting','todo','medium','Missions — narrate when she succeeds'),mk('pa9','Nyla longer-term learning and mental health plan','parenting','todo','high'),mk('pa10','Read: How to Talk So Little Kids Will Listen','parenting','todo','medium'),mk('pa11','Read: The Whole-Brain Child','parenting','todo','medium'),mk('pa12','Read: Differently Wired','parenting','todo','low'),mk('he1','Book follow-up bloods appointment','health','todo','high','8 months since last results — CV risk + inflammation flagged'),mk('he2','Discuss RED-S with doctor','health','todo','high','Hormone suppression from training deficit'),mk('he3','Lp(a) management plan with doctor','health','todo','high'),mk('he4','Oestradiol — discuss options if deficit correction does not move it','health','todo','high'),mk('he5','Request D3 and zinc baseline levels from GP','health','todo','medium'),mk('he6','Review blood results with GP','health','todo','high'),mk('he7','Set up pill box and stock up','health','todo','medium'),mk('he8','Create morning skincare caddy','health','todo','medium'),mk('he9','Create evening skincare caddy','health','todo','medium'),mk('ho1',"Nyla's room — remove junk",'home','todo','medium'),mk('ho2',"Nyla's room — sort bookshelf",'home','todo','medium'),mk('ho3',"Nyla's room — replace table with study table",'home','todo','medium'),mk('ho4',"Nyla's room — remove posters",'home','todo','low'),mk('ho5',"Nyla's room — art for walls",'home','todo','low'),mk('ho6','Our bedroom — art','home','todo','low'),mk('ho7','Our bedroom — wardrobe sort and suitcases','home','todo','medium'),mk('ho8','Lounge — declutter','home','todo','medium'),mk('ho9','Lounge — plants','home','todo','low'),mk('ho10','Lounge — behind-door storage','home','todo','medium'),mk('ho11','My study — mirror and getting ready station','home','todo','medium'),mk('ho12','My study — under desk sort','home','todo','low'),mk('ho13','Kitchen — storage solutions','home','todo','medium'),mk('ho14','Kitchen — remove AC unit and find alternative location','home','todo','medium'),mk('ho15','Upstairs cupboard — shelving','home','todo','medium'),mk('ho16','Garden — fake grass turf','home','todo','medium'),mk('ho17','Garden — balcony plants with Nyla','home','todo','low'),mk('sh1','Side table for bedroom','shopping','todo','medium'),mk('sh2','Plants — bedroom, lounge, balcony','shopping','todo','low'),mk('sh3','Stairs: baskets','shopping','todo','low'),mk('sh4','Towels and soap dispensers — guest + upstairs bathrooms','shopping','todo','medium'),mk('sh5','Mirrors — both bathrooms','shopping','todo','medium'),mk('sh6','Mirror for study / getting ready station','shopping','todo','medium'),mk('sh7','Balcony chest','shopping','todo','low'),mk('sh8','Garden furniture','shopping','todo','medium'),mk('sh9','Garden chest','shopping','todo','low'),mk('cv1','One craft fair this year','crafted','todo','medium'),mk('cv2','Nyla cushion plan — handmake','crafted','todo','medium'),mk('cv3','Crochet inventory','crafted','todo','low')];
 
-let tasks=[],recur={},cat='today',expId=null,filt='active',sq='',sbOpen=true;
+let tasks=[],recur={},cat='today',expId=null,filt='active',sq='',sbOpen=true,sortMode='default';
 
 const todayKey=()=>new Date().toISOString().split('T')[0];
 const monthKey=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)};
@@ -244,6 +247,15 @@ function bindAll(){
   document.getElementById('nav').addEventListener('click',e=>{const b=e.target.closest('.nav-btn');if(b&&b.dataset.cat)selCat(b.dataset.cat);});
   // Filters
   document.getElementById('ftabs').addEventListener('click',e=>{const t=e.target.closest('.ftab');if(!t)return;filt=t.dataset.filter;document.querySelectorAll('.ftab').forEach(x=>x.classList.remove('active'));t.classList.add('active');renderContent();});
+  // Sort button
+  document.getElementById('sort-btn').addEventListener('click',()=>{
+    sortMode=sortMode==='default'?'priority':sortMode==='priority'?'duedate':'default';
+    const labels={'default':'↕ Default','priority':'↑ Priority','duedate':'↑ Due Date'};
+    const sb=document.getElementById('sort-btn');
+    sb.textContent=labels[sortMode];
+    sb.classList.toggle('on',sortMode!=='default');
+    renderContent();
+  });
   // Search
   document.getElementById('hdr-search').addEventListener('input',e=>{sq=e.target.value.toLowerCase();renderContent();});
   // Content delegation
@@ -254,7 +266,12 @@ function bindAll(){
     const chk=e.target.closest('.tc-check');
     if(chk&&chk.dataset.id){e.stopPropagation();tickTask(chk.dataset.id);return;}
     const tr=e.target.closest('.tr');
-    if(tr&&tr.dataset.id){expId=expId===tr.dataset.id?null:tr.dataset.id;renderContent();return;}
+    if(tr&&tr.dataset.id){
+      expId=expId===tr.dataset.id?null:tr.dataset.id;
+      renderContent();
+      if(expId){setTimeout(()=>{const el=document.querySelector('.tc.exp');if(el)el.scrollIntoView({behavior:'smooth',block:'nearest'});},50);}
+      return;
+    }
     const ms=e.target.closest('.ms-row');
     if(ms&&ms.dataset.tid){const t=tasks.find(t=>t.id===ms.dataset.tid);if(t){const m=t.milestones.find(m=>m.id===ms.dataset.mid);if(m){m.done=!m.done;save();renderContent();}}return;}
     const db=e.target.closest('.del-btn');
@@ -303,6 +320,7 @@ function renderHdr(){
   document.getElementById('view-title').textContent=lbl;
   document.getElementById('view-title').style.color=iC?'#C9972B':'#1B2A4A';
   document.getElementById('hdr-search').style.display=show?'':'none';
+  document.getElementById('sort-btn').style.display=show?'':'none';
   document.getElementById('ftabs').style.display=show?'':'none';
   if(show){const ft=getFiltered();document.getElementById('view-sub').textContent=ft.filter(t=>t.status!=='done').length+' active · '+ft.filter(t=>t.status==='done').length+' done';}
   else document.getElementById('view-sub').textContent=isR?'Tap to tick off':'';
@@ -310,13 +328,25 @@ function renderHdr(){
 
 function getFiltered(){
   const cd=CATS.find(c=>c.id===cat);
+  const priOrder={'high':0,'medium':1,'low':2};
   return tasks.filter(t=>{
     if(t.category!==cat)return false;
     if(sq&&!t.title.toLowerCase().includes(sq)&&!(t.notes||'').toLowerCase().includes(sq))return false;
     if(filt==='active')return t.status!=='done';
     if(filt==='done')return t.status==='done';
     return true;
-  }).sort((a,b)=>{if(!cd?.sortByDate)return 0;if(!a.dueDate&&!b.dueDate)return 0;if(!a.dueDate)return 1;if(!b.dueDate)return -1;return a.dueDate.localeCompare(b.dueDate);});
+  }).sort((a,b)=>{
+    if(sortMode==='priority'){
+      const pa=priOrder[a.priority]??1,pb=priOrder[b.priority]??1;
+      return pa!==pb?pa-pb:0;
+    }
+    if(sortMode==='duedate'||cd?.sortByDate){
+      if(!a.dueDate&&!b.dueDate)return 0;
+      if(!a.dueDate)return 1;if(!b.dueDate)return -1;
+      return a.dueDate.localeCompare(b.dueDate);
+    }
+    return 0;
+  });
 }
 
 function renderContent(){
