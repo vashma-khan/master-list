@@ -269,7 +269,7 @@ function bindAll(){
     if(tr&&tr.dataset.id){
       expId=expId===tr.dataset.id?null:tr.dataset.id;
       renderContent();
-      if(expId){setTimeout(()=>{const el=document.querySelector('.tc.exp');if(el)el.scrollIntoView({behavior:'smooth',block:'nearest'});},50);}
+    if(expId){setTimeout(()=>{const el=document.querySelector('.tc.exp');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},60);}
       return;
     }
     const ms=e.target.closest('.ms-row');
@@ -386,7 +386,6 @@ function tcH(t){
       </div>
       ${idel?`<div class="fr"><div class="fg"><div class="fl">${t.status==='delegated'?'Delegated to':'Waiting on'}</div><input class="fi" value="${t.delegatedTo||''}" placeholder="Name or detail..." data-id="${t.id}" data-field="delegatedTo"></div><div class="fg"><div class="fl">Chase Date</div><input type="date" class="fi" value="${t.chaseDate||''}" data-id="${t.id}" data-field="chaseDate"></div></div>`:''}
       <div style="margin-bottom:10px"><div class="fl">Move to category</div><select class="fs" style="max-width:200px" data-id="${t.id}" data-field="category"><option value="today"${t.category==='today'?' selected':''}>Today</option>${CATS.map(c=>`<option value="${c.id}"${t.category===c.id?' selected':''}>${c.label}</option>`).join('')}</select></div>
-      <div style="margin-bottom:10px"><div class="fl">Notes</div><textarea class="fta" rows="2" data-id="${t.id}" data-field="notes">${t.notes||''}</textarea></div>
       ${msH}
       <button class="del-btn" data-id="${t.id}">Delete task</button>
     </div>`;
